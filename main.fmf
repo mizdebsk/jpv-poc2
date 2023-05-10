@@ -1,0 +1,22 @@
+/plan:
+  discover:
+    how: fmf
+    exclude: bar
+  execute:
+    how: tmt
+
+/tests:
+  test: echo '[]' >${TMT_TEST_DATA}/results.yaml
+  result: custom
+
+  /foo:
+  /bar:
+  /xyzzy:
+
+  /runit:
+    test: |
+      tests=$(grep -- '^  - name:' ${TMT_PLAN_DATA}/../discover/tests.yaml | awk '{print$3}' | grep -v runit)
+      for test in $tests; do
+        echo "- name: $test
+        result: pass" >>${TMT_TEST_DATA}/results.yaml
+      done
